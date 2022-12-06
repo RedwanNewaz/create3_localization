@@ -1,4 +1,0 @@
-[console_scripts]
-robot_state = create3_localization.state_fusion:main
-state_viz = create3_localization.state_visulizer:main
-

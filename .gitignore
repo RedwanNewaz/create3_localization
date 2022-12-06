@@ -4,3 +4,6 @@ __pycache__/
 EKFilter/__pycache__/
 launch/__pycache__/
 .vscode
+dist
+create3_localization.egg-info
+build
