@@ -24,7 +24,8 @@ setup(
     entry_points={
         'console_scripts': [
             'state_viz = create3_localization.state_visulizer:main',
-            'robot_state = create3_localization.state_fusion:main' 
+            'robot_state = create3_localization.state_fusion:main' ,
+            'sync_state = create3_localization.state_odom:main' 
         ],
     },
 )
