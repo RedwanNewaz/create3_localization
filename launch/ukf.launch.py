@@ -13,8 +13,8 @@ import sys
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    # create3_traj_controller_dir = get_package_share_directory('create3_traj_controller')
-    create3_traj_controller_dir = "/home/robo/colcon_ws/src/create3_localization"
+    create3_traj_controller_dir = get_package_share_directory('create3_localization')
+    # create3_traj_controller_dir = "/home/roboticslab/colcon_ws/src/create3_localization"
     # get path to params file
     params_path = os.path.join(
         create3_traj_controller_dir,

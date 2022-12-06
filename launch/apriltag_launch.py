@@ -20,7 +20,7 @@ def generate_launch_description():
     nexigo_cam = {
         "camera_name" : 'nexigo_cam',
         "camera_info_url": "file://{}/config/head_camera_nexigo_1920.yaml".format(current_pkg_dir),
-        "framerate" : 30.0,
+        "framerate" : 60.0,
         "frame_id" : "camera",
         "image_height"  : 1080,
         "image_width"   : 1920,

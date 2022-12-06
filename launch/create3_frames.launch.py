@@ -20,8 +20,8 @@ def generate_launch_description():
     # robot frame converstion 
     robot_frame = Node(package="create3_localization", 
         executable='robot_state',
-        name='robot_state_estimator',
-        output='screen'
+        name='robot_state_estimator'
+        
 
     )
 
@@ -31,6 +31,13 @@ def generate_launch_description():
         executable="state_viz"
     )
 
+    odom_node = Node(
+        name='odom_sync_state',
+        package="create3_localization",
+        executable="sync_state"
+        
+    )
+
     
     current_pkg_dir = get_package_share_directory("create3_localization")
     sensor_fusion = launch.actions.IncludeLaunchDescription(
@@ -38,4 +45,4 @@ def generate_launch_description():
                 current_pkg_dir + '/launch/ukf.launch.py'))
 
     # return launch.LaunchDescription([robot_frame, viz_node, odom_transform])
-    return launch.LaunchDescription([map_transform, odom_transform, robot_frame, viz_node, sensor_fusion])
+    return launch.LaunchDescription([map_transform, odom_transform, odom_node, robot_frame, viz_node, sensor_fusion])
