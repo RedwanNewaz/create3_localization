@@ -13,7 +13,7 @@ class ExtendedKalmanFilter:
       1.0  # variance of velocity
     ])**2  # predict state covariance
     self.R = np.diag(
-      [1.0, 1.0,
+      [0.10, 0.10,
        0.0])**2  # Observation x,y, theta -> position & orientation covariance
     self.DT = 0.15  # time tick [s]
 

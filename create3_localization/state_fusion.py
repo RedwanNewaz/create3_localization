@@ -45,7 +45,8 @@ class Localizer(Node):
         
         odom_msg = Odometry()
         odom_msg.header.frame_id = "map"
-        odom_msg.child_frame_id = "odom"
+        odom_msg.child_frame_id = "ukf/base_link"
+        # odom_msg.child_frame_id = "odom"
         odom_msg.header.stamp = self.get_clock().now().to_msg()
 
         odom_msg.pose.pose.position.x, odom_msg.pose.pose.position.y, odom_msg.pose.pose.position.z = position
