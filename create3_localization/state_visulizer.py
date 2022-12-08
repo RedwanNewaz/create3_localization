@@ -8,6 +8,7 @@ from cv_bridge import CvBridge
 from nav_msgs.msg import Odometry 
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 import cv2
+from .low_pass_filter import LowpassFilter
 
 class ApriltagSubscriber(Node):
 
@@ -37,11 +38,16 @@ class ApriltagSubscriber(Node):
 
         # ukf filter subscription 
         self.ukf_subscription = self.create_subscription(
-            Odometry, 'apriltag/odom',
+            Odometry, 
+            # 'apriltag/odom',
+            # 'odometry/filtered',
+            '/sync/odom',
             self.ukf_callback,
             10
         )
         self.ukf_subscription
+
+        # self.ukf_lpf = LowpassFilter(0.99, 0.99)
 
     def ukf_callback(self, msg):
         def convert(arg, param):
@@ -51,6 +57,10 @@ class ApriltagSubscriber(Node):
         orientation = convert(msg.pose.pose.orientation, 4)
 
         marker = self.getMarkerWindow(position, orientation)
+        
+        # self.ukf_lpf(msg.pose.pose.position, msg.pose.pose.orientation)
+        # marker = self.getMarkerWindow(self.ukf_lpf.position, self.ukf_lpf.orientation)
+        
         self.pub_marker.publish(marker)
 
 

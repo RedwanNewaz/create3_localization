@@ -1,15 +1,5 @@
 import numpy as np 
-from scipy.spatial.transform import Rotation as R
-
-camera_to_map_translation = [1.892, -0.726, 1.278]
-camera_to_map_orientation = [0.126, 0.923, 0.317, -0.177]
-
-
-camera_to_map_translation1 = [-1.615, -1.217, 2.799]
-camera_to_map_orientation1 = [0.999, 0.033, -0.028, 0.005]
-
-camera_to_map_translation2 = [1.709, -1.042, 2.483]
-camera_to_map_orientation2 = [0.999, 0.025, 0.031, 0.011]
+# from nav_msgs.msg import Odometry
 
 class LowpassFilter:
     def __init__(self, alpha, beta) -> None:
@@ -17,19 +7,10 @@ class LowpassFilter:
         self.orientation = None 
         self.alpha = alpha
         self.beta = beta 
-        # camera to map 
-        # self.__CtM = self.to_transform_matrix(camera_to_map_translation, camera_to_map_orientation)
 
     def __call__(self, *args, **kwds):
 
         self.position, self.orientation = self.convert(args[0], 3), self.convert(args[1], 4)
-        # position, orientation = self.convert(args[0], 3), self.convert(args[1], 4)
-        # camera to robot 
-        # RtM = self.to_transform_matrix(position, orientation) - self.__CtM 
-        # MtR = np.linalg.pinv(RtM) * self.__CtM         
-        # position, orientation = self.decompose_transformation(MtR)
-
-        # self.update(position, orientation)
 
     def update(self, position, orientation):
         if self.position is None or self.orientation is None:
@@ -45,17 +26,16 @@ class LowpassFilter:
         else:
             return np.array([arg.x, arg.y, arg.z])
 
-    def to_transform_matrix(self, position, orientation):
-        r = R.from_quat(orientation).as_matrix()
-        t = np.identity(4)
-        for i in range(3):
-            for j in range(3):
-                t[i, j] = r[i, j]
-        t[0, -1], t[1, -1], t[2, -1] = position
-        return t
+    # def to_nav_msg(self):
+    #     odom_msg = Odometry()
+    #     odom_msg.header.frame_id = "map"
+    #     odom_msg.child_frame_id = "ukf/base_link"
+    #     # odom_msg.child_frame_id = "odom"
+    #     # odom_msg.header.stamp = self.get_clock().now().to_msg()
 
-    def decompose_transformation(self, t):
-        rotation = t[:3, :3]
-        translation = t[:3, -1]
-        orientation = R.from_matrix(rotation).as_quat()
-        return translation, orientation
+    #     odom_msg.pose.pose.position.x, odom_msg.pose.pose.position.y, odom_msg.pose.pose.position.z = self.position
+    #     odom_msg.pose.pose.orientation.x, odom_msg.pose.pose.orientation.y, odom_msg.pose.pose.orientation.z, odom_msg.pose.pose.orientation.w \
+    #         = self.orientation
+    #     return odom_msg
+
+

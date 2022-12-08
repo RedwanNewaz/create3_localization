@@ -44,5 +44,6 @@ def generate_launch_description():
         launch.launch_description_sources.PythonLaunchDescriptionSource(
                 current_pkg_dir + '/launch/ukf.launch.py'))
 
-    # return launch.LaunchDescription([robot_frame, viz_node, odom_transform])
-    return launch.LaunchDescription([map_transform, odom_transform, odom_node, robot_frame, viz_node, sensor_fusion])
+    # return launch.LaunchDescription([robot_frame, odom_node, odom_transform, viz_node, odom_transform])
+    # return launch.LaunchDescription([map_transform, odom_transform, odom_node, robot_frame, viz_node, sensor_fusion])
+    return launch.LaunchDescription([map_transform, odom_transform, odom_node, robot_frame, viz_node])
