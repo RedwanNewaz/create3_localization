@@ -14,6 +14,10 @@ from tf_transformations import euler_from_quaternion
 
 
 
+qos_policy = rclpy.qos.QoSProfile(reliability=rclpy.qos.ReliabilityPolicy.BEST_EFFORT,
+                                          history=rclpy.qos.HistoryPolicy.KEEP_LAST,
+                                          depth=1)
+
 class Localizer(Node):
     def __init__(self):
         super().__init__('state_fusion')
@@ -39,7 +43,11 @@ class Localizer(Node):
         self.timer = self.create_timer(0.015, self.on_timer)
         self.pub_odom = self.create_publisher(Odometry, pub_topic, 10)
 
+<<<<<<< HEAD
         self.cmd_sub = self.create_subscription(Twist, cmd_topic, self.cmd_vel_callback, 10)
+=======
+        self.cmd_sub = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, qos_policy)
+>>>>>>> ec70e75f34a63be0fa2bb2a0de05308ff409d30c
         
         self.from_frame_rel = from_frame
         self.to_frame_rel = to_frame

@@ -3,6 +3,7 @@ from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
+import os 
 
 # detect all 36h11 tags
 cfg_36h11 = {
@@ -10,7 +11,9 @@ cfg_36h11 = {
     "family": "36h11",
     "size": 0.162,
     "max_hamming": 0,
-    "z_up": True
+    "z_up": True, 
+    "detector": {"threads" : 12, "sharpening": 0.25},
+    "tag": {"ids" : [7]}
 }
 
 
@@ -20,7 +23,7 @@ def generate_launch_description():
     nexigo_cam = {
         "camera_name" : 'nexigo_cam',
         "camera_info_url": "file://{}/config/head_camera_nexigo_1920.yaml".format(current_pkg_dir),
-        "framerate" : 30.0,
+        "framerate" : 60.0,
         "frame_id" : "camera",
         "image_height"  : 1080,
         "image_width"   : 1920,
@@ -29,6 +32,9 @@ def generate_launch_description():
         # "color_format"  : "yuv422p",
         "video_device"  : "/dev/video0"
     }
+
+    # configure apriltag 
+    # cfg_36h11 = os.path.join(current_pkg_dir, 'config', 'cfg_36h11.yaml')
 
     cam_node = ComposableNode(
         namespace='camera',
