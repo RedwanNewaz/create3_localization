@@ -21,21 +21,41 @@ def generate_launch_description():
     robot_frame = Node(package="create3_localization", 
         executable='robot_state',
         name='robot_state_estimator',
-        output='screen'
+        output='screen',
+        parameters=[
+                {'from_frame': 'camera'},
+                {'to_frame': 'tag36h11:7'},
+                {'pub_topic': 'apriltag/odom'},
+                {'cmd_topic': 'cmd_vel'}
+            ]
 
     )
 
     viz_node = Node(
         name='apriltag_36h11Viz',
         package="create3_localization",
-        executable="state_viz"
+        executable="state_viz",
+        parameters=[
+                {'kf_topic': 'apriltag/odom'}
+            ]
+    )
+
+    sensor_fusion = Node(
+        name='sensor_fusion',
+        package="create3_localization",
+        executable="sync_state",
+        parameters=[
+                {'apriltag_odom': 'apriltag/odom'},
+                {'create3_odom': 'odom'},
+                {'pub_odom': 'sync/odom'}
+            ]
     )
 
     
-    current_pkg_dir = get_package_share_directory("create3_localization")
-    sensor_fusion = launch.actions.IncludeLaunchDescription(
-        launch.launch_description_sources.PythonLaunchDescriptionSource(
-                current_pkg_dir + '/launch/ukf.launch.py'))
+    # current_pkg_dir = get_package_share_directory("create3_localization")
+    # sensor_fusion = launch.actions.IncludeLaunchDescription(
+    #     launch.launch_description_sources.PythonLaunchDescriptionSource(
+    #             current_pkg_dir + '/launch/ukf.launch.py'))
 
     # return launch.LaunchDescription([robot_frame, viz_node, odom_transform])
     return launch.LaunchDescription([map_transform, odom_transform, robot_frame, viz_node, sensor_fusion])

@@ -20,6 +20,10 @@ class ApriltagSubscriber(Node):
         self.pub_img = self.create_publisher(Image, "tag_detections/image_raw", 10)
         self.pub_marker = self.create_publisher(Marker, "/create3_state", 10)
 
+        self.declare_parameter('kf_topic', 'apriltag/odom')
+        kf_topic = self.get_parameter('kf_topic').get_parameter_value().string_value
+
+
         self.tag_subscription = self.create_subscription(
             AprilTagDetectionArray,
             '/apriltag/detections',
@@ -35,13 +39,13 @@ class ApriltagSubscriber(Node):
         )
         self.image_subscription
 
-        # ukf filter subscription 
-        self.ukf_subscription = self.create_subscription(
-            Odometry, 'apriltag/odom',
+        # kf filter subscription 
+        self.kf_subscription = self.create_subscription(
+            Odometry, kf_topic,
             self.ukf_callback,
             10
         )
-        self.ukf_subscription
+        self.kf_subscription
 
     def ukf_callback(self, msg):
         def convert(arg, param):

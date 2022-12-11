@@ -12,9 +12,18 @@ class OdomState(Node):
         self.__refApriltagCoord = None 
         self.__refOdomCoord = None 
 
-        self.apriltag_odom_sub = self.create_subscription(Odometry, 'apriltag/odom', self.apriltag_odom_callback, 10)
-        self.create3_odom_sub = self.create_subscription(Odometry, 'odom', self.create3_odom_callback, 10)
-        self.pub_odom = self.create_publisher(Odometry, 'sync/odom', 10)
+        self.declare_parameter('apriltag_odom', 'apriltag/odom')
+        self.declare_parameter('create3_odom', 'odom')
+        self.declare_parameter('pub_odom', 'sync/odom')
+
+        apriltag_odom = self.get_parameter('apriltag_odom').get_parameter_value().string_value
+        create3_odom = self.get_parameter('create3_odom').get_parameter_value().string_value
+        pub_odom = self.get_parameter('pub_odom').get_parameter_value().string_value
+
+
+        self.apriltag_odom_sub = self.create_subscription(Odometry, apriltag_odom, self.apriltag_odom_callback, 10)
+        self.create3_odom_sub = self.create_subscription(Odometry, create3_odom, self.create3_odom_callback, 10)
+        self.pub_odom = self.create_publisher(Odometry, pub_odom, 10)
 
 
     def apriltag_odom_callback(self, msg: Odometry):

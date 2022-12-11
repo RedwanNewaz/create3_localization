@@ -15,9 +15,19 @@ from tf_transformations import euler_from_quaternion
 
 
 class Localizer(Node):
-    def __init__(self, from_frame, to_frame, pub_topic):
+    def __init__(self):
         super().__init__('state_fusion')
         print("localizer node started")
+
+        self.declare_parameter('from_frame', 'camera')
+        self.declare_parameter('to_frame', 'tag36h11:7')
+        self.declare_parameter('pub_topic', 'apriltag/odom')
+        self.declare_parameter('cmd_topic', 'cmd_vel')
+
+        from_frame = self.get_parameter('from_frame').get_parameter_value().string_value
+        to_frame = self.get_parameter('to_frame').get_parameter_value().string_value
+        pub_topic = self.get_parameter('pub_topic').get_parameter_value().string_value
+        cmd_topic = self.get_parameter('cmd_topic').get_parameter_value().string_value
 
           # Declare and acquire `target_frame` parameter
         self.target_frame = self.declare_parameter(
@@ -29,7 +39,7 @@ class Localizer(Node):
         self.timer = self.create_timer(0.015, self.on_timer)
         self.pub_odom = self.create_publisher(Odometry, pub_topic, 10)
 
-        self.cmd_sub = self.create_subscription(Twist, 'cmd_vel', self.cmd_vel_callback, 10)
+        self.cmd_sub = self.create_subscription(Twist, cmd_topic, self.cmd_vel_callback, 10)
         
         self.from_frame_rel = from_frame
         self.to_frame_rel = to_frame
@@ -112,10 +122,8 @@ class Localizer(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    from_frame = "camera"
-    to_frame = "tag36h11:7"
-    pub_topic = 'apriltag/odom'
-    minimal_subscriber = Localizer(from_frame, to_frame, pub_topic)
+    
+    minimal_subscriber = Localizer()
 
     rclpy.spin(minimal_subscriber)
 
